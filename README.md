@@ -67,13 +67,18 @@ The `-p` option also allows us to rename properties. By passing an argument in t
 
 ### Adding external properties
 
-TopoJSON also allows us to import properties from a TSV or CVS file and add them to our map.
-We can use the [example_data.csv](./example_data.csv) file included in this repository to test this functionality. Navigate to the *regiones* directory and enter the following command:
+TopoJSON also allows us to import properties from a TSV or CVS file and add them to our map with the `-e` option.
+We can use the [example_data.csv](./example_data.csv) file included in this repository to test this functionality by adding a new property to our regions map. Navigate to the *regiones* directory and enter the following command:
 
 ```
 topojson -o output.json -e ../example_data.csv \
---id-porperty=COD_REGI,+ID \
+--id-property=COD_REGI,+ID \
 -p unemployment=+VALUE,name=NOM_REG \
 --shapefile-encoding utf8 \
---simplify-proportion 0.5 provincias.shp
+--simplify-proportion 0.5 regiones.shp
 ```
+
+The `-e ../example_data.csv` part specifies the CSV file we will be taking the data from. The [example_data.csv](./example_data.csv) file contains two columns ID and VALUE, the first corresponds to the identifier of each region and the second to the value we want to add to the map.
+
+The `--id-property=COD_REGI,+ID` part of the command tells TopoJSON the properties "COD_REGI" from the original map and "ID" from the CSV file function as identifiers for the objects in the map, the program will use these identifiers to join the properties on the map with those in the CSV file. "ID" is preceded by the plus sign (+) in the command to specify the values int the "ID" column should be treated as numbers otherwise they would be treated as strings and wouldn't match the values in "COD_REGI".  
+Finally the `-p new_prop=+VALUE,NOM_REG` tells the program the output map should have the properties "new_prop" which takes it's values from the "VALUE" column in the CSV file and "NOM_REG" which is taken from the original map. Once again we prepend "VALUE" with a plus sign to trear these values as numbers.
