@@ -1,75 +1,72 @@
-# maps
-Maps of Chile for interactive visualizations
+# Maps
+Mapas de Chile para visualizaciones interactivas.
 
-This repository contains the raw shapefiles for maps of Chile's communes, provinces and regions as well as instructions to export the maps to the [GeoJSON](http://geojson.org/) format for their visualization.
+El repositorio contiene archivos .shp con mapas de las comunas, provincias y regiones de Chile, además de instrucciones para transformar estos archivos a formato [GeoJSON](http://geojson.org/) para su visualización.
 
-## Requirements
+## Dependencias
 
-[Topojson](https://github.com/mbostock/topojson) is used for exporting the maps to the GeoJson format. Topojson itself requires [Node.js](https://nodejs.org)  and [npm](https://www.npmjs.com/)
+Se usa el programa [Topojson](https://github.com/mbostock/topojson) para exportar los mapas a formato GeoJson. Topojson además tiene como dependencias [Node.js](https://nodejs.org) y [npm](https://www.npmjs.com/).
 
-## Map data
+## Datos de los mapas
+Los mapas se crearon en base a los archivos disponibles en el portal de datos abiertos de la [Biblioteca Nacional del Congreso](https://www.bcn.cl/siit/mapas_vectoriales/index_html).
 
-The maps were compiled using data from the [chilean library of congress](https://www.bcn.cl/siit/mapas_vectoriales/index_html) open data website
+### Regiones
+Los archivos de la carpeta *regiones* contienen los datos del mapa de las 15 regiones de Chile. Cada región tiene las siguientes propiedades:
 
-### regions
-The files in the *regiones* directory have the map data for Chile's 15 regions. Each region has the following properties:
-
-| Name        | Description           |  
+| Nombre        | Descripción  |  
 | ------------- |:-------------|
-|  NOM_REG  | Name of the region |
-| COD_REGI  | Identifier number for the region |
+|  NOM_REG  | Nombre de la region |
+| COD_REGI  | Número identificador de la región |
 
-### provinces
-The files in the *provincias* directory have the map data for Chile's 54 provinces. Each province has the following properties:
+### Provincias
+Los archivos de la carpeta *provincias* contienen los datos del mapa de las 54 provincias de Chile. Cada provincia tiene las siguientes propiedades:
 
-| Name        | Description           |  
+| Nombre        | Descripción  |  
 | ------------- |:-------------|
-|  NOM_PROV  | Name of the province |
-| COD_PROV  | Identifier number for the province |
-| COD_REGI  | Identifier number for the region the province belongs to |
-| REGION  | Name of the region the province belongs to |
+|  NOM_PROV  | Nombre de la provincia |
+| COD_PROV  | Número identificador de la provincia |
+| COD_REGI  | Número identificador de la región a la cual pertenece la provincia |
+| REGION  | Nombre de la región a la cual pertenece la provincia |
 
-### communes
-The files in the *comunas* directory have the map data for Chile's 346 communes. Each commune has the following properties:
+### Comunas
+Los archivos de la carpeta *comunas* contienen los datos del mapa de las 346 comunas de Chile. Cada comuna tiene las siguientes propiedades:
 
-| Name        | Description           |  
+| Nombre        | Descripción  |  
 | ------------- |:-------------|
-|  NOM_COM  | Name of the commune |
-| CODIGO  | Identifier number for the commune |
-| REGION  | Name of the region the commune belongs to |
-| PROV  | Name of the province the commune belongs to |
+|  NOM_COM  | Nombre de la comuna |
+| CODIGO  | Número identificador de la comuna |
+| REGION  | Nombre de la región a la cual pertenece la comuna |
+| PROV  | Nombre de la provincia a la cual pertenece la comuna |
 
-## Exporting
-In order to use the maps for visualizations they have to be exported to the GeoJSON format, in order to export the maps we'll use TopoJSON, an extension of GeoJSON that uses a more compact representation to reduce file size.
+## Exportar
+Para usar los mapas en visualizaciones interactivas es necesario exportarlos al formato GeoJson. Para exportar los mapas usaremos TopoJson, una extensión del formato GeoJSON que usa una representación más compacta para reducir el tamaño de archivo del mapa final.
 
-First to check if topojson is installed correctly type `topojson --help` into a terminal, this should display a message with the version and available options.
-If for example we wanted to export the provinces map we should firt navigate to the *provincias* folder and enter the following command:
-
+Antes de empezar hay que revisar si topojson está instalado correctamente, ejecutar el comando `topojson --help` en la consola debería mostrar un mensaje con el número de versión y las opciones disponibles.
+Para exportar, por ejemplo, el mapa de provincias hay que navegar a la carpeta *provincias* y ejecutar el siguiente comando:
 ```
 topojson -o output.json -p --shapefile-encoding utf8 provincias.shp
 ```
-To break down what this command is doing, the `-o output.json` specifies the output file. The `-p` flag ensures the map will contain all the provinces properties such as names and identifiers, without it the resulting map will only contain the province's shapes. The `--shapefile-encoding utf8` option specifies that the utf-8 encoding should be used when writing the properties. Finally `provincias.shp` is the file containing the map's raw data.
+En el comando anterior la opción `-o output.json` especifica el archivo de salida. La opción `-p` hace que se el archivo de salida contenga las propiedades del mapa original como los nombres e identificadores de cada provincia, sin está opción el mapa solo contendrá los poligonos correspondientes a cada provincia. La opción `--shapefile-encoding utf8` especifica que se debe usar el encoding utf-8 para escribir las propiedades. Finalmente `provincias.shp` es el archivo que contiene los datos del mapa original.
 
-The result of this command sohuld be the newly created output.json file which contains the map data. We can test it by uploading the file to [geojson.io](http://geojson.io) this should display all the provinces as polygons overlayed on a map of the world, you can click on any of the provinces to see it's properties.
+Cuando termine la ejecución del comando se creará el archivo output.json, podemos comprobar que este archivo se creó correctamente subiendolo a [geojson.io](http://geojson.io). Se deberían desplegar sobre el mapa los poligonos de las provincias de Chile, al hacer click en cualquier provincia se pueden ver sus propiedades.
 
-### Reducing map size
-TopoJSON can be used to reduce the map's file size by reducing the quality of the map, that is, the amount of points it contains. We do this by using the `--simplify-proportion` option, using the same example as before to reduce the size of the provinces map we use the following command:
+### Reducir el tamaño del archivo
+TopoJSON puede reducir el tamaño del archivo al reducir la calidad del mapa, esto es, la cantidad de puntos que contiene. Para esto usamos la opción `--simplify-proportion`, usando el mismo ejemplo anterior para reducir el tamaño del mapa de provincias usamos el siguiente comando:
 ```
 topojson -o output.json -p --shapefile-encoding utf8 \
  --simplify-proportion 0.5 provincias.shp
 ```
-This results in an output.json file which has roughly half the points of the original map. We can control how many points are eliminated by passing a number between 0 and 1 as an argument. Once again we can upload the resulting file to [geojson.io](http://geojson.io) to see the difference in quality.
+El nuevo archivo archivo output.json tiene aproximadamente la mitad de puntos que el original. Se puede controlar la cantidad de puntos que se conservan en el mapa pasando como argumento un número entre 0 y 1. Nuevamente podemos probar el archivo subiéndolo a [geojson.io](http://geojson.io) para apreciar la diferencia en la calidad del mapa.
 
-### Filtering or renaming properties
-The `-p` option can be used to omit certain properties from the resulting map or to rename them. By default TopoJSON removes all properties, using `-p` will preserve all properties. Passing an argument will preserve the specified properties, for example `-p FOO` will preserve the property with name "FOO". Multiple properties can be specified by separating them with commas, as in `-p FOO,BAR`.
+### Filtrar o renombrar propiedades
+El flag `-p` se puede usar para seleccionar que propiedades se mantienen en el mapa o para renombrarlas. Por defecto TopoJSON elimina todas las propiedades del mapa original, al usar la opción `-p` sin argumentos se preservan todas las propiedades. Al pasar argumentos se puede especificar que propiedades preservar, por ejemplo `-p FOO` preservará la propiedad "FOO". Se pueden pasar múltiples propiedades separándolas con comas, por ejemplo `-p FOO,BAR`.
 
-The `-p` option also allows us to rename properties. By passing an argument in the form `-p target=source` we will preserve the "source" property and rename it to "target". Renaming properties also works with multiple properties. For example, to downcase the property names "FOO" and "BAR", use `-p foo=FOO,bar=BAR`.
+La opción `-p` también permite renombrar propiedades. AL pasar un argumento con el formato `-p nuevo=original` preservará la propiedad "original" y la renombrará a "nuevo" en el archivo de salida. Renombrar propiedades también funciona entregando múltiples propiedades como argumento. Por ejemplo la opción `-p foo=FOO,bar=BAR` renombrará con minúsculas las propiedades "FOO" y "BAR".
 
-### Adding external properties
+### Añadir propiedades desde archivos externos
 
-TopoJSON also allows us to import properties from a TSV or CVS file and add them to our map with the `-e` option.
-We can use the [example_data.csv](./example_data.csv) file included in this repository to test this functionality by adding a new property to our regions map. Navigate to the *regiones* directory and enter the following command:
-
+TopoJSON permite añadir propiedades a un mapa tomando datos desde un archivo TSV o CSV usando la opción `-e`.
+Usemos el archivo [example_data.csv](./example_data.csv) incluido en este repositorio para probar esta funcionalidad añadiendo una nueva propiedad al mapa de regiones. Desde el directorio *regiones* ingresar el siguiente comando:
 ```
 topojson -o output.json -e ../example_data.csv \
 --id-property=COD_REGI,+ID \
@@ -77,8 +74,6 @@ topojson -o output.json -e ../example_data.csv \
 --shapefile-encoding utf8 \
 --simplify-proportion 0.5 regiones.shp
 ```
-
-The `-e ../example_data.csv` part specifies the CSV file we will be taking the data from. The [example_data.csv](./example_data.csv) file contains two columns ID and VALUE, the first corresponds to the identifier of each region and the second to the value we want to add to the map.
-
-The `--id-property=COD_REGI,+ID` part of the command tells TopoJSON the properties "COD_REGI" from the original map and "ID" from the CSV file function as identifiers for the objects in the map, the program will use these identifiers to join the properties on the map with those in the CSV file. "ID" is preceded by the plus sign (+) in the command to specify the values int the "ID" column should be treated as numbers otherwise they would be treated as strings and wouldn't match the values in "COD_REGI".  
-Finally the `-p new_prop=+VALUE,NOM_REG` tells the program the output map should have the properties "new_prop" which takes it's values from the "VALUE" column in the CSV file and "NOM_REG" which is taken from the original map. Once again we prepend "VALUE" with a plus sign to trear these values as numbers.
+La opción `-e ../example_data.csv` especifica el archivo CSV con los datos. El archivo [example_data.csv](./example_data.csv) tiene dos columnas de datos, "ID" y "VALUE", la primera corresponde al número identificados de cada región y la segunda el valor de la propiedad para añadir al mapa.
+La opción `--id-property=COD_REGI,+ID` le dice a topojson que la propiedad "COD_REGI" del mapa original y "ID" del archivo CSV son identificadores para los objetos del mapa, el programa usa estos identificadores para emparejar los valores del CSV con los del mapa. "ID" es precedido por un signo más (+) para especificar que los valores de la columna "ID" son números, de lo contrario serían interpretados como strings y no se podrían emparejar con los de "COD_REGI".
+Finalmente la opción `-p nueva_prop=+VALUE,NOM_REG` especifica que el archivo de salida tendrá las propiedades "nueva_prop" que viene del valor de "VALUE" del archivo CSV y "NOM_REG" que viene del mapa original. Al igual que antes el signo más significa que la propiedad correspondiente será tratada como número.
