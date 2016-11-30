@@ -5,7 +5,13 @@ El repositorio contiene archivos .shp con mapas de las comunas, provincias y reg
 
 ## Dependencias
 
-Se usa el programa [Topojson](https://github.com/mbostock/topojson) para exportar los mapas a formato GeoJson. Topojson además tiene como dependencias [Node.js](https://nodejs.org) y [npm](https://www.npmjs.com/).
+Se usa el programa [Topojson](https://github.com/mbostock/topojson) (version 1.6.27) para exportar los mapas a formato GeoJson. Topojson además tiene como dependencias [Node.js](https://nodejs.org) y [npm](https://www.npmjs.com/).
+
+Para instalar las dependencias en Ubuntu utilizar los siguientes comandos:
+```
+sudo apt-get install nodejs
+sudo npm install -g topojson@1.6.27
+```
 
 ## Datos de los mapas
 Los mapas se crearon en base a los archivos disponibles en el portal de datos abiertos de la [Biblioteca Nacional del Congreso](https://www.bcn.cl/siit/mapas_vectoriales/index_html).
